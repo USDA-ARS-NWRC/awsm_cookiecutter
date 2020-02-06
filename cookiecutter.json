@@ -1,11 +1,13 @@
 {
    "full_name": "Micah Johnson",
    "email": "micah.johnson150@gmail.com",
-   "github_username": "micahjohnson150",
-   "project_name": "Name of your science project",
-   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
-   "project_short_description": "A short description of your project",
-   "release_date": "{% now 'local' %}",
-   "version": "0.1.0",
+   "basin_name": "Lakes Basin",
+   "project_slug": "{{ cookiecutter.basin_name.lower().replace(' ', '_') }}",
+   "epsg": "32611",
+   "awsm_input_data_type": "gridded",
+   "basin_setup_version": "0.13.2",
+   "awsm_version": "0.10.0",
+   "project_short_description": "Modeling the lakes",
+   "date_created": "{% now 'local' %}",
    "_extensions": ["jinja2_time.TimeExtension"]
 }

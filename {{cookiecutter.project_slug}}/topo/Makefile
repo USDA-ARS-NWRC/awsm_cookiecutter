@@ -1,8 +1,8 @@
 ############################# INPUTS ###########################################
 DEM_SOURCE := dem_sources.txt
-BASIN_NAME := lakes basin
+BASIN_NAME := {{cookiecutter.basin_name}}
 POUR_POINTS := pour_points.bna
-EPSG := 32611
+EPSG := {{cookiecutter.epsg}}
 
 # LEFT BOTTOM, RIGHT TOP
 MAX_EXTENT := 318520.405027 4157522.88734 329767.728206 4167937.07547

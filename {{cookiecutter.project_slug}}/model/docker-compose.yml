@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+   inicheck:
+      image: usdaarsnwrc/awsm:0.10.0
+      volumes:
+        - ../topo:/topo
+        - ./:/data
+        - ~/Downloads:/Downloads
+      entrypoint: inicheck
+      working_dir: /data
+   cmd:
+      image: usdaarsnwrc/awsm:{{cookiecutter.awsm_version}}
+      volumes:
+        - ./:/data
+      entrypoint: /bin/bash

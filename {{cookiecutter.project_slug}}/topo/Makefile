@@ -10,6 +10,10 @@ DELINEATE_THRESHOLD := 10000 100000
 DELINEATE_RESOLUTION := 10
 NTHREADS := 2
 
+# Path in the docker to the veg data
+VEG_DATA := /Downloads/US_140EVT_20180618/
+
+
 # LEFT BOTTOM RIGHT TOP
 # BASIN_EXTENT := 283967.6875 4050545 381092 4120020
 ################################################################################
@@ -99,27 +103,25 @@ gis_package:
 
 qgis:
 	# Make a QGIS basin project
-	# Make the dem colormap and hillshade
+	# Make the hillshade
 	gdaldem hillshade $(DEM_IMG) ./dem/hillshade.tif
 	mkdir -p ./colormaps
 
 	# Make the DEM colormap
-	python3.6 ./scripts/make_dem_colormap.py $(DEM_IMG)
+	cd colormaps & make_dem_colormap $(DEM_IMG)
 
 	# Make the Vegetation colormap
-	python3.6 ./scripts/make_veg_type_colormap.py
-
-	# move the hillshade colormap over
-	cp scripts/qgis_templates/hillshade.xml colormaps/hillshade.qml
+	cd colormaps && make_veg_type_colormap  $(VEG_DATA)
 
 	# Make the final project file
-	echo $(MIN_THRESH)
-	python3.6 scripts/make_qgis_proj.py -t $(DEM_IMG) \
-																			./dem/hillshade.tif \
-																			-s $(POUR_POINTS) \
-																			./delineation/*basin*.shp \
-																			./delineation/streamflow/thresh_$(MIN_THRESH)/net_thresh_*.shp \
-																			-n basin_setup/topo.nc \
-																			-v veg_type dem
+	make_qgis_proj -t $(DEM_IMG) \
+										./dem/hillshade.tif \
+										-s $(POUR_POINTS) \
+										./delineation/*basin*.shp \
+										./delineation/streamflow/thresh_$(MIN_THRESH)/net_thresh_*.shp \
+										-n basin_setup/topo.nc \
+										-v veg_type dem \
+										--epsg $(EPSG)
+
 clean_all:
 	rm -rf dem basin_setup delineation

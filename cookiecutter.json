@@ -2,11 +2,9 @@
    "full_name": "Micah Johnson",
    "email": "micah.johnson150@gmail.com",
    "basin_name": "Lakes Basin",
-   "project_slug": "{{ cookiecutter.basin_name.lower().replace(' ', '_') }}",
+   "project_slug": "{{ cookiecutter.basin_name.lower().replace('river','').replace('basin','').strip().replace(' ', '_') }}",
    "epsg": "32611",
-   "awsm_input_data_type": "gridded",
    "basin_setup_version": "0.13.2",
-   "awsm_version": "0.10.0",
    "project_short_description": "Modeling the lakes",
    "date_created": "{% now 'local' %}",
    "_extensions": ["jinja2_time.TimeExtension"]

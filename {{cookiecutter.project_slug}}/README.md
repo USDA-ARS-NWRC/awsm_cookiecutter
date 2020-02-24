@@ -15,14 +15,15 @@ For more info on using the scripts for generating the topo see:
  * **Projection info** - All projections should be in EPSG {{ cookiecutter.epsg }} for final use. For more info see https://spatialreference.org/ref/epsg/{{ cookiecutter.epsg }}/
 
 ## Software
-* [basin_setup  V{{cookiecutter.basin_setup_version}}](https://github.com/USDA-ARS-NWRC/basin_setup/tree/v{{cookiecutter.basin_setup_version}})
-
+* [basin_setup V{{cookiecutter.basin_setup_version}}](https://github.com/USDA-ARS-NWRC/basin_setup/tree/v{{cookiecutter.basin_setup_version}})
+* [gdal] (https://gdal.org/programs/)
+* [taudem] (http://hydrology.usu.edu/taudem/taudem5/documentation.html)
+*
 ## Credit
 The project structure was generated using the [awsm_cookiecutter](https://github.com/USDA-ARS-NWRC/awsm_cookiecutter)
-All the software used for generating the modeling file was written under
-opensource licenses at the USDA-ARS-NWRC in Boise Idaho.
+All the software used for generating the modeling files was written under
+open source licenses at the USDA-ARS-NWRC in Boise Idaho.
 
 ## Contact
 * **Project started**: {{ cookiecutter.date_created }}
 * **Originally Setup By**: {{cookiecutter.full_name.title()}}
-* **Email**: {{ cookiecutter.email }}

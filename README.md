@@ -3,10 +3,10 @@
 This cookie cutter template can be use for modeling a new basin in AWMS.
 
 ## Features
-* Delineating basin
+* Delineating basins
 * Topo.nc (static images for AWSM) file generation
 * Docker management
-* QGIS files for looking at basins
+* QGIS project files for looking at basins
 
 ## Project Structure
 

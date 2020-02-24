@@ -2,7 +2,7 @@
 DEM_SOURCE := dem_sources.txt
 BASIN_NAME := {{cookiecutter.basin_name}}
 POUR_POINTS := pour_points.bna
-EPSG := {{cookiecutter.epsg}}
+EPSG := {{ cookiecutter.epsg }}
 
 # LEFT BOTTOM, RIGHT TOP
 MAX_EXTENT := 318520.405027 4157522.88734 329767.728206 4167937.07547
@@ -27,7 +27,12 @@ ZIP:=$$(python3.6 -c "print('{}_shapefile_EPSG{}.zip'.format('$(BASIN_NAME)'.low
 # Rebuild the BASIN_NAME to look pretty
 BASIN_NAME:=$$(python3.6 -c "print('{}'.format('$(BASIN_NAME)'.title()).replace('_',' '))")
 
+# Assume the lowest threshold is the first for streams in the GIS file
 MIN_THRESH:=$$(python3.6 -c "print('{}'.format('$(DELINEATE_THRESHOLD)'.split(' ')[0]))")
+
+# Location of the veg data for GIS images
+VEG_MOSAIC := $(VEG_DATA)/Grid/us_140evt/dblbnd.adf
+
 
 all:
 	make delineate
@@ -60,6 +65,7 @@ download_dem:
 	done <$(DEM_SOURCE)
 
 MOSAIC:=./dem/mosaic.img
+FULL_DEM:=./dem/full_dem_epsg_$(EPSG).tif \
 
 dem_process:
 	# Unzip all the dems
@@ -70,11 +76,16 @@ dem_process:
 	gdalwarp -overwrite \
 					 -t_srs EPSG:$(EPSG) \
 					 -tr $(DELINEATE_RESOLUTION) $(DELINEATE_RESOLUTION) \
-					 -te $(MAX_EXTENT) \
 					 -r bilinear \
 					 $(MOSAIC) \
+					 $(FULL_DEM)
+	# Crop the image to the final extent
+	gdalwarp -overwrite \
+					 -tr $(DELINEATE_RESOLUTION) $(DELINEATE_RESOLUTION) \
+					 -te $(MAX_EXTENT) \
+					 -r bilinear \
+					 $(FULL_DEM) \
 					 $(DEM_IMG)
-
 	# Clean up some processing images
 	rm $(MOSAIC)
 
@@ -94,12 +105,24 @@ topo:
 							-bn $(BASIN_NAME) \
 							-sb delineation/*_subbasin.shp \
 							-dm $(DEM_IMG) \
-							# --extent $(BASIN_EXTENT) \
 							-d /Downloads
+							# --extent $(BASIN_EXTENT)
 
 gis_package:
 	# Build a GIS package for bundle zip files
 	zip $(ZIP) ./delineation/*basin_outline.* ./delineation/*_subbasin.*
+
+
+VEG_LAYER:=veg_type.tif
+
+veg_process:
+	# Crop veg data for GIS
+	gdalwarp  -t_srs EPSG:$(EPSG) \
+	 				  -overwrite \
+						-te $(MAX_EXTENT) \
+						-tr $(DELINEATE_RESOLUTION) $(DELINEATE_RESOLUTION) \
+						$(VEG_MOSAIC) \
+						$(VEG_LAYER)
 
 qgis:
 	# Make a QGIS basin project
@@ -108,13 +131,20 @@ qgis:
 	mkdir -p ./colormaps
 
 	# Make the DEM colormap
-	cd colormaps & make_dem_colormap $(DEM_IMG)
+	make_dem_colormap $(DEM_IMG)
 
 	# Make the Vegetation colormap
-	cd colormaps && make_veg_type_colormap  $(VEG_DATA)
+	make_veg_type_colormap $(VEG_DATA)
+
+	# Move them to the colormaps directory
+	mv *.qml colormaps/.
+
+	# Make the veg data
+	make veg_process
 
 	# Make the final project file
-	make_qgis_proj -t $(DEM_IMG) \
+	make_qgis_proj -t $(VEG_LAYER) \
+										$(DEM_IMG) \
 										./dem/hillshade.tif \
 										-s $(POUR_POINTS) \
 										./delineation/*basin*.shp \
@@ -124,4 +154,4 @@ qgis:
 										--epsg $(EPSG)
 
 clean_all:
-	rm -rf dem basin_setup delineation
+	rm -rf dem basin_setup delineation setup.qgs $(NAME)_veg_type.tif

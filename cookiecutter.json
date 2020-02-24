@@ -3,7 +3,7 @@
    "basin_name": "Lakes Basin",
    "project_slug": "{{ cookiecutter.basin_name.lower().replace('river','').replace('basin','').strip().replace(' ', '_') }}",
    "epsg": "32611",
-   "basin_setup_version": "0.14.0",
+   "basin_setup_version": "0.14.1",
    "project_short_description": "Modeling the {{cookiecutter.basin_name}}",
    "date_created": "{% now 'local' %}",
    "_extensions": ["jinja2_time.TimeExtension"]

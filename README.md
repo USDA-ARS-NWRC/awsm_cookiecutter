@@ -12,6 +12,12 @@ This cookie cutter template can be use for modeling a new basin in AWMS.
 
 ```console
 {{project}}
+├── model (under development)
+│   ├── input
+│   ├── output
+│   └── scripts
+│       └── runner.sh
+├── README.md
 └── topo
     ├── dem_sources.txt
     ├── docker-compose.yml
@@ -21,6 +27,8 @@ This cookie cutter template can be use for modeling a new basin in AWMS.
     └── scripts
         ├── run.ps1
         └── run.sh
+
+
 ```
 
 ### File Description
